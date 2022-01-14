@@ -13,3 +13,7 @@ npx hardhat node
 node scripts/sample-script.js
 npx hardhat help
 ```
+
+# Setup
+1. Follow instructions on https://hardhat.org/getting-started/#overview in order to configure hardhat.
+2. install open zeppelin contracts https://docs.openzeppelin.com/ running npm install "@openzeppelin/contracts".
