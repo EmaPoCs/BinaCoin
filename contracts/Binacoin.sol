@@ -26,9 +26,8 @@ contract Binacoin is ERC20, ERC20Burnable, Ownable {
     }
 
     function updateBinagorianRate(address bAddress, uint16 newRate) public onlyOwner {
-        Binagorian memory binagorian = _binagorians[bAddress];
+        Binagorian storage binagorian = _binagorians[bAddress];
         binagorian.rate = newRate;
-        _binagorians[bAddress] = binagorian;
     }
 
     function getBinagorian(address bAddress) public view returns (string memory name, uint256 entryTime, uint16 rate) {
