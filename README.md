@@ -10,8 +10,21 @@
 4. const Binagorians = await hre.ethers.getContractFactory("Binagorians");
 5. const binagorians = await Binagorians.attach([address where the contract was deployed - you can see it as output of step 2]);
 ```
-Doing that you're gonna have a node console app to interact with the smart contract (`const binagorians`).
-
+Doing that you're gonna have a node console app to interact with the smart contract (`const binagorians`). So, then you can do something like:
+```shell
+await binagorians.getCurrent()
+```
+and get
+```shell
+[
+  'owner',
+  BigNumber { _hex: '0x42e576f7', _isBigNumber: true },
+  150,
+  name: 'owner',
+  entryTime: BigNumber { _hex: '0x42e576f7', _isBigNumber: true },
+  rate: 150
+]
+```
 # How to run tests
 ```shell
 npx hardhat test
