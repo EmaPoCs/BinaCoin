@@ -14,12 +14,16 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const Gold = await hre.ethers.getContractFactory("GldToken");
-  const gold = await Gold.deploy();
+  const Binagorians = await hre.ethers.getContractFactory("Binagorians");
+  const binagorians = await Binagorians.deploy();
 
-  await gold.deployed();
+  await binagorians.deployed();
 
-  console.log("Gold deployed to:", gold.address);
+  console.log("Binagorians deployed to:", binagorians.address);
+
+  await binagorians.create("0xdd2fd4581271e230360230f9337d5c0430bf44c0", 123, "Ema", 20);
+  await binagorians.create("0x8626f6940e2eb28930efb4cef49b2d1f2c9c1199", 123, "Mati", 30);
+  await binagorians.create("0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc", 1232233, "Fer", 40);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
