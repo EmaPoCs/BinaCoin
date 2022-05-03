@@ -16,3 +16,7 @@ Doing that you're gonna have a node console app to interact with the smart contr
 ```shell
 npx hardhat test
 ```
+
+# Docs and diagrams
+https://docs.google.com/document/d/1J1d1gyTlxeF_mg0UxFhZf2R6JXmvVtB3FwcjHFfv954
+https://app.diagrams.net/#G1VX0OooReXccGuzypxHl3lXSgItHHIFVG
