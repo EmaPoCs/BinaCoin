@@ -10,6 +10,8 @@ describe("Binagorians", function () {
     await contract.deployed();
   });
 
+  const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
+
   describe("create", () => {
     it("Only owner can create binagorians", async function () {
       expect(await contract.owner()).to.equal(owner.address);
@@ -23,7 +25,7 @@ describe("Binagorians", function () {
     it("Address should be valid", async function () {
       let entryTime = Date.parse('2017-01-05 00:00:00Z')/1000;
       
-      let createBinagorianTx = contract.create("0x0000000000000000000000000000000000000000", entryTime, 'Ema', 20);
+      let createBinagorianTx = contract.create(ZERO_ADDRESS, entryTime, 'Ema', 20);
 
       await expect(createBinagorianTx).to.be.revertedWith("Not valid address");
     });
@@ -67,7 +69,7 @@ describe("Binagorians", function () {
       await expect(contract.connect(addr1).updateRate(wallet.address, 20)).to.be.reverted;
     });
     it("Address should be valid", async function () {
-      let updateTx = contract.updateRate("0x0000000000000000000000000000000000000000", 65);
+      let updateTx = contract.updateRate(ZERO_ADDRESS, 65);
 
       await expect(updateTx).to.be.revertedWith("Not valid address");
     });
@@ -103,7 +105,7 @@ describe("Binagorians", function () {
       await expect(contract.connect(addr1).remove(wallet.address)).to.be.reverted;
     });
     it("Address should be valid", async function () {
-      let removeTx = contract.remove("0x0000000000000000000000000000000000000000");
+      let removeTx = contract.remove(ZERO_ADDRESS);
 
       await expect(removeTx).to.be.revertedWith("Not valid address");
     });
@@ -157,7 +159,7 @@ describe("Binagorians", function () {
 
     });
     it("Address should be valid", async function () {
-      let getTx = contract.get("0x0000000000000000000000000000000000000000");
+      let getTx = contract.get(ZERO_ADDRESS);
 
       await expect(getTx).to.be.revertedWith("Not valid address");
     });
