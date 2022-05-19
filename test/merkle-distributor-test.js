@@ -75,6 +75,30 @@ describe("MerkleDistributor", function () {
             let invalidAccountClaim = await distributor.canClaim("0x94069d197c64D831fdB7C3222Dd512af5339bd2d", users[2].amount, proof);
             expect(invalidAccountClaim).to.be.false;
           });
+
+          it("Should revert can claim for drop already claimed", async () => {
+            const merkleTree = new MerkleTree(elements, keccak256, { sort: true });
+            const root = merkleTree.getHexRoot();
+            const leaf = elements[3];
+            const proof = merkleTree.getHexProof(leaf);
+    
+            // Deploy contract
+            const Distributor = await ethers.getContractFactory("MerkleDistributor");
+            const distributor = await Distributor.deploy(binacoin.address, root);
+            await distributor.deployed();
+
+            // Minting tokens to be able to transfer
+            await binacoin.mint(distributor.address, 30);
+        
+            // Attempt to claim and verify success
+            await expect(distributor.claim(users[3].address, users[3].amount, proof))
+                .to.emit(distributor, "Claimed")
+                .withArgs(users[3].address, users[3].amount);
+            
+            // Attempt to can claim again and verify revert
+            await expect(distributor.canClaim(users[3].address, users[3].amount, proof))
+                .to.be.revertedWith("MerkleDistributor: Drop already claimed.");
+          });
     });
 
     describe("claim", () => {
