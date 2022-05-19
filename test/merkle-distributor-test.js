@@ -25,6 +25,58 @@ describe("MerkleDistributor", function () {
         utils.solidityKeccak256(["address", "uint256"], [x.address, x.amount])
     );
 
+    describe("canClaim", () => {
+        it("Should can claim successfully for valid proof", async () => {
+            const merkleTree = new MerkleTree(elements, keccak256, { sort: true });
+            const root = merkleTree.getHexRoot();
+            const leaf = elements[3];
+            const proof = merkleTree.getHexProof(leaf);
+    
+            // Deploy contract
+            const Distributor = await ethers.getContractFactory("MerkleDistributor");
+            const distributor = await Distributor.deploy(binacoin.address, root);
+            await distributor.deployed();
+
+            // Attempt to can claim and verify success
+            let canClaim = await distributor.canClaim(users[3].address, users[3].amount, proof);
+            expect(canClaim).to.be.true;
+          });
+        
+        it("Shouldn't can claim for invalid proof", async () => {
+            const merkleTree = new MerkleTree(elements, keccak256, { sort: true });
+            const root = merkleTree.getHexRoot();
+    
+            // Deploy contract
+            const Distributor = await ethers.getContractFactory("MerkleDistributor");
+            const distributor = await Distributor.deploy(binacoin.address, root);
+            await distributor.deployed();
+
+            // Attempt to can claim and verify success
+            let canClaim = await distributor.canClaim(users[2].address, users[2].amount, []);
+            expect(canClaim).to.be.false;
+          });
+
+        it("Shouldn't can claim for invalid amount or address", async () => {
+            const merkleTree = new MerkleTree(elements, keccak256, { sort: true });
+            const root = merkleTree.getHexRoot();
+            const leaf = elements[2];
+            const proof = merkleTree.getHexProof(leaf);
+    
+            // Deploy contract
+            const Distributor = await ethers.getContractFactory("MerkleDistributor");
+            const distributor = await Distributor.deploy(binacoin.address, root);
+            await distributor.deployed();
+
+            // random amount
+            let invalidAmountClaim = await distributor.canClaim(users[2].address, 10000, proof);
+            expect(invalidAmountClaim).to.be.false;
+
+            // random address
+            let invalidAccountClaim = await distributor.canClaim("0x94069d197c64D831fdB7C3222Dd512af5339bd2d", users[2].amount, proof);
+            expect(invalidAccountClaim).to.be.false;
+          });
+    });
+
     describe("claim", () => {
         it("Should claim successfully for valid proof", async () => {
             const merkleTree = new MerkleTree(elements, keccak256, { sort: true });

@@ -38,7 +38,7 @@ contract MerkleDistributor {
         returns (bool)
     {
         require(
-            true, // TODO: claimer address should be a Binagorian registered address
+            true, // TODO: claimer address should be a Binagorian registered address (analize if that's required)
             "MerkleDistributor: Address is not a candidate for claim."
         );
         require(!claimed[account], 'MerkleDistributor: Drop already claimed.');
