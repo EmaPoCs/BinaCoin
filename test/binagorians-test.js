@@ -222,7 +222,7 @@ describe("Binagorians", function () {
       expect(airdropAmounts.length).to.equal(1);
       let binagorianAirdrop = airdropAmounts[0];
       expect(binagorianAirdrop).to.not.be.null;
-      expect(binagorianAirdrop['amount']).to.equal(entryTime + 123);
+      expect(binagorianAirdrop['amount']).to.equal(20);
       expect(binagorianAirdrop['addr']).to.equal(wallet.address);
     });
 
@@ -256,7 +256,7 @@ describe("Binagorians", function () {
       expect(airdropAmounts.length).to.equal(3);
       let binagorianAirdrop = airdropAmounts[1];
       expect(binagorianAirdrop).to.not.be.null;
-      expect(binagorianAirdrop['amount']).to.equal(entryTime2 + 123);
+      expect(binagorianAirdrop['amount']).to.equal(15);
       expect(binagorianAirdrop['addr']).to.equal(wallet2.address);
     });
   });
