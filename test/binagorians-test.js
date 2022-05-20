@@ -55,8 +55,8 @@ describe("Binagorians", function () {
       expect(binagorian['rate']).to.equal(20);
 
       let registeredAddresses = await contract.getRegisteredAddresses();
-      expect(registeredAddresses.length).to.equal(2);
-      expect(registeredAddresses[1]).to.equal(wallet.address);
+      expect(registeredAddresses.length).to.equal(1);
+      expect(registeredAddresses[0]).to.equal(wallet.address);
     });
   });
 
@@ -109,17 +109,14 @@ describe("Binagorians", function () {
 
       await expect(removeTx).to.be.revertedWith("Not valid address");
     });
+
     it("Address should exists", async function () {
       let wallet = ethers.Wallet.createRandom();
       let removeTx = contract.remove(wallet.address);
 
       await expect(removeTx).to.be.revertedWith("Address does not exists");
     });
-    it("Owner can't be deleted", async function () {
-      let removeTx = contract.remove(owner.address);
 
-      await expect(removeTx).to.be.revertedWith("Owner can't be deleted");
-    });
     it("Should remove binagorian", async function () {
       let wallet = ethers.Wallet.createRandom();
       let entryTime = Date.parse('2017-01-05 00:00:00Z')/1000;
@@ -139,8 +136,7 @@ describe("Binagorians", function () {
       await removeTx.wait();
   
       let registeredAddresses = await contract.getRegisteredAddresses();
-      expect(registeredAddresses.length).to.equal(1);
-      expect(registeredAddresses[0]).to.equal(await contract.owner()); // just the owner address
+      expect(registeredAddresses).to.be.empty;
     });
   });
 
@@ -203,6 +199,65 @@ describe("Binagorians", function () {
       expect(currentBinagorian['name']).to.equal('Ema');
       expect(currentBinagorian['entryTime']).to.equal(entryTime);
       expect(currentBinagorian['rate']).to.equal(20);
+    });
+  });
+
+  describe("get airdrop amounts", () => {
+    it("No binagorians should returns empty list", async function () {
+      let airdropAmounts = await contract.getAirdropAmounts();
+      expect(airdropAmounts).to.be.empty;
+    });
+
+    it("Created 1 binagorian and get properly airdrop amount", async function () {
+      // Creating Binagorian
+      let wallet = ethers.Wallet.createRandom();
+      let entryTime = Date.parse('2017-01-05 00:00:00Z')/1000;
+
+      let createBinagorianTx = await contract.create(wallet.address, entryTime, 'Binagorian_1', 20);
+      // Wait until the transaction is mined
+      await createBinagorianTx.wait();
+
+      let airdropAmounts = await contract.getAirdropAmounts();
+      expect(airdropAmounts).to.not.be.null;
+      expect(airdropAmounts.length).to.equal(1);
+      let binagorianAirdrop = airdropAmounts[0];
+      expect(binagorianAirdrop).to.not.be.null;
+      expect(binagorianAirdrop['amount']).to.equal(entryTime + 123);
+      expect(binagorianAirdrop['addr']).to.equal(wallet.address);
+    });
+
+    it("Created 3 binagorians and get properly airdrop amount", async function () {
+      // Creating Binagorian 1
+      let wallet = ethers.Wallet.createRandom();
+      let entryTime = Date.parse('2017-01-05 00:00:00Z')/1000;
+
+      let createBinagorianTx = await contract.create(wallet.address, entryTime, 'Binagorian_1', 20);
+      // Wait until the transaction is mined
+      await createBinagorianTx.wait();
+
+      // Creating Binagorian 2
+      let wallet2 = ethers.Wallet.createRandom();
+      let entryTime2 = Date.parse('2018-01-05 00:00:00Z')/1000;
+
+      let createBinagorianTx2 = await contract.create(wallet2.address, entryTime2, 'Binagorian_2', 30);
+      // Wait until the transaction is mined
+      await createBinagorianTx2.wait();
+
+      // Creating Binagorian 3
+      let wallet3 = ethers.Wallet.createRandom();
+      let entryTime3 = Date.parse('2019-01-05 00:00:00Z')/1000;
+
+      let createBinagorianTx3 = await contract.create(wallet3.address, entryTime3, 'Binagorian_3', 30);
+      // Wait until the transaction is mined
+      await createBinagorianTx3.wait();
+
+      let airdropAmounts = await contract.getAirdropAmounts();
+      expect(airdropAmounts).to.not.be.null;
+      expect(airdropAmounts.length).to.equal(3);
+      let binagorianAirdrop = airdropAmounts[1];
+      expect(binagorianAirdrop).to.not.be.null;
+      expect(binagorianAirdrop['amount']).to.equal(entryTime2 + 123);
+      expect(binagorianAirdrop['addr']).to.equal(wallet2.address);
     });
   });
 

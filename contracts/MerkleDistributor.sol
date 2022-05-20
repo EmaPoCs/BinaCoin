@@ -20,7 +20,9 @@ contract MerkleDistributor {
         merkleRoot = _merkleRoot;
     }
 
-    function claim(address account, uint256 amount, bytes32[] calldata merkleProof) external {
+    function claim(address account, uint256 amount, bytes32[] calldata merkleProof) 
+        external 
+    {
         require(
             canClaim(account, amount, merkleProof),
             "MerkleDistributor: Invalid proof."
@@ -38,13 +40,11 @@ contract MerkleDistributor {
         returns (bool)
     {
         require(
-            true, // TODO: claimer address should be a Binagorian registered address (analize if that's required)
-            "MerkleDistributor: Address is not a candidate for claim."
+            !claimed[account],
+            'MerkleDistributor: Drop already claimed.'
         );
-        require(!claimed[account], 'MerkleDistributor: Drop already claimed.');
 
         bytes32 node = keccak256(abi.encodePacked(account, amount));
-        return
-            MerkleProof.verify(merkleProof, merkleRoot, node);
+        return MerkleProof.verify(merkleProof, merkleRoot, node);
     }
 }
