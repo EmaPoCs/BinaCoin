@@ -2,8 +2,10 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 contract Binagorians is Ownable {
+    using SafeMath for uint256;
 
     constructor() {
     }
@@ -154,10 +156,26 @@ contract Binagorians is Ownable {
 
     function getAirdropAmount(uint256 entryTime) 
         private 
-        pure 
+        view 
         returns (uint256 amount) 
     {
-        // TODO: Rewrite this function to calculate the airdrop amount according to parameters
-        return entryTime + 123;
+        uint256 timeWorking = block.timestamp - entryTime;
+        uint256 monthsWorking = SafeMath.div(timeWorking, 2629743); // 2629743 is the number of seconds in a month
+        
+        if (monthsWorking <= 6) {
+            return 3;
+        }
+        else if (monthsWorking <= 12) {
+            return 6;
+        }
+        else if (monthsWorking <= 36) {
+            return 10;
+        }
+        else if (monthsWorking <= 60) {
+            return 15;
+        }
+        else {
+            return 20;
+        }
     }
 }
