@@ -114,9 +114,9 @@ contract Binagorians is Ownable {
         validAddress(_bAddress) 
         addressExists(_bAddress) 
         view 
-        returns (string memory name, uint256 entryTime, uint16 rate) 
+        returns (string memory name, uint256 entryTime, uint16 rate, uint256 airdropAmount) 
     {
-        return (_binagorians[_bAddress].name, _binagorians[_bAddress].entryTime, _binagorians[_bAddress].rate);
+        return (_binagorians[_bAddress].name, _binagorians[_bAddress].entryTime, _binagorians[_bAddress].rate, getAirdropAmount(_bAddress));
     }
 
     function getCurrent() 
@@ -147,18 +147,19 @@ contract Binagorians is Ownable {
     {
         BinagorianAirdrop[] memory airdrops = new BinagorianAirdrop[](_binagoriansArray.length);
         for (uint i=0; i<_binagoriansArray.length; i++) {
-            BinagorianAirdrop memory bAirdrop = BinagorianAirdrop(_binagoriansArray[i], getAirdropAmount(_binagorians[_binagoriansArray[i]].entryTime));
+            BinagorianAirdrop memory bAirdrop = BinagorianAirdrop(_binagoriansArray[i], getAirdropAmount(_binagoriansArray[i]));
             airdrops[i] = bAirdrop;
         }
 
         return airdrops;
     }
 
-    function getAirdropAmount(uint256 entryTime) 
+    function getAirdropAmount(address bAddress) 
         private 
         view 
         returns (uint256 amount) 
     {
+        uint256 entryTime = _binagorians[bAddress].entryTime;
         uint256 timeWorking = block.timestamp - entryTime;
         uint256 monthsWorking = SafeMath.div(timeWorking, 2629743); // 2629743 is the number of seconds in a month
         
