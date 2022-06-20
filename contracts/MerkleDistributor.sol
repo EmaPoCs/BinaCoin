@@ -29,7 +29,7 @@ contract MerkleDistributor {
         );
 
         claimed[account] = true;
-        IERC20(token).safeTransfer(account, amount);
+        IERC20(token).safeTransfer(account, amount * (10 ** 18));
 
         emit Claimed(account, amount);
     }

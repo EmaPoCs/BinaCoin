@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "./MerkleDistributor.sol";
 
 contract Binagorians is Ownable {
     using SafeMath for uint256;
@@ -68,6 +69,7 @@ contract Binagorians is Ownable {
     
     mapping(address => Binagorian) private _binagorians;
     address [] private _binagoriansArray;
+    MerkleDistributor public _merkleDistributor;
 
     function create(address _bAddress, uint256 _entryTime, string memory _name, uint16 _rate) 
         public 
@@ -178,5 +180,16 @@ contract Binagorians is Ownable {
         else {
             return 20;
         }
+    }
+
+    function generateAirdrop(address token, bytes32 merkleRoot) 
+        public 
+        onlyOwner 
+    {
+        _merkleDistributor = new MerkleDistributor(token, merkleRoot);
+    }
+
+    function distributor() public view returns(address) {
+        return address(_merkleDistributor);
     }
 }
