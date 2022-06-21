@@ -8,8 +8,8 @@ import "./MerkleDistributor.sol";
 contract Binagorians is Ownable {
     using SafeMath for uint256;
 
-    constructor() {
-    }
+    event Created(address _address);
+    event Deleted(address _address);
 
     // Modifier to check that an address
     // was already registered.
@@ -79,6 +79,7 @@ contract Binagorians is Ownable {
     {
         _binagoriansArray.push(_bAddress);
         _binagorians[_bAddress] = Binagorian(_name, _entryTime, _rate, _binagoriansArray.length - 1);
+        emit Created(_bAddress);
     }
 
     // Move the last element to the deleted spot.
@@ -98,6 +99,7 @@ contract Binagorians is Ownable {
         _binagoriansArray[index] = lastBinagorianAddress;
         _binagoriansArray.pop();
         delete _binagorians[_bAddress];
+        emit Deleted(_bAddress);
     }
 
     function updateRate(address _bAddress, uint16 _newRate) 
