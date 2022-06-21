@@ -29,7 +29,7 @@ contract MerkleDistributor {
         );
 
         claimed[account] = true;
-        IERC20(token).safeTransfer(account, amount * (10 ** 18));
+        IERC20(token).safeTransfer(account, amount * (10 ** 18)); // TODO: See if we can get decimals from token contract instead of hardcoding it
 
         emit Claimed(account, amount);
     }

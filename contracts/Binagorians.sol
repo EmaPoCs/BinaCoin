@@ -69,7 +69,7 @@ contract Binagorians is Ownable {
     
     mapping(address => Binagorian) private _binagorians;
     address [] private _binagoriansArray;
-    MerkleDistributor public _merkleDistributor;
+    MerkleDistributor public _merkleDistributor; // TODO: Find a way to handle multiple distributors
 
     function create(address _bAddress, uint256 _entryTime, string memory _name, uint16 _rate) 
         public 
@@ -189,7 +189,7 @@ contract Binagorians is Ownable {
         _merkleDistributor = new MerkleDistributor(token, merkleRoot);
     }
 
-    function distributor() public view returns(address) {
+    function getMerkleDistributorAddress() public view returns(address) {
         return address(_merkleDistributor);
     }
 }
